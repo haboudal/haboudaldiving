@@ -52,7 +52,9 @@ backend/src/
 │   ├── guardians/   # Parent/minor linking, consent
 │   ├── centers/     # Diving centers, vessels, staff
 │   ├── trips/       # Trip management, bookings, waiting list
-│   └── payments/    # HyperPay integration, checkout, refunds
+│   ├── payments/    # HyperPay integration, checkout, refunds
+│   ├── reviews/     # Center and instructor reviews
+│   └── dive-logs/   # Dive log tracking and statistics
 ├── integrations/
 │   └── srsa/        # SRSA quota management
 ├── utils/           # Logger, errors, helpers
@@ -137,6 +139,30 @@ Base URL: `http://localhost:3001/api/v1`
 - GET `/:id` - Get payment details
 - POST `/:id/refund` - Process refund (admin/center owner)
 - GET `/` - List all payments (admin only)
+
+**Reviews** (`/reviews`):
+- GET `/centers/:centerId` - Get reviews for a center (with stats)
+- GET `/instructors/:instructorId` - Get reviews for an instructor
+- GET `/:id` - Get single review
+- GET `/my/list` - Get current user's reviews
+- GET `/my/pending` - Get bookings available for review
+- POST `/` - Create a new review
+- PATCH `/:id` - Update own review (within 7 days)
+- DELETE `/:id` - Delete own review
+- POST `/:id/helpful` - Mark review as helpful
+- POST `/:id/report` - Report review for moderation
+- POST `/centers/:centerId/reviews/:reviewId/respond` - Center responds to review
+
+**Dive Logs** (`/dive-logs`):
+- GET `/` - Get my dive logs (with filters)
+- GET `/statistics` - Get my dive statistics
+- GET `/:id` - Get single dive log
+- GET `/trip/:tripId` - Get dive logs for a trip
+- POST `/` - Create a new dive log
+- PATCH `/:id` - Update a dive log
+- DELETE `/:id` - Delete a dive log
+- POST `/import` - Import dives from dive computer
+- POST `/:id/verify` - Verify dive log (instructor only)
 
 ## Key Implementation Patterns
 

@@ -25,6 +25,8 @@ import adminRoutes from './modules/admin/admin.routes';
 import mobileRoutes from './modules/mobile/mobile.routes';
 import analyticsRoutes from './modules/analytics/analytics.routes';
 import notificationsRoutes from './modules/notifications/notifications.routes';
+import reviewsRoutes from './modules/reviews/reviews.routes';
+import diveLogsRoutes from './modules/dive-logs/dive-logs.routes';
 
 export function createApp(): Express {
   const app = express();
@@ -95,6 +97,8 @@ export function createApp(): Express {
   apiV1.use('/mobile', mobileRoutes);
   apiV1.use('/analytics', analyticsRoutes);
   apiV1.use('/notifications', notificationsRoutes);
+  apiV1.use('/reviews', reviewsRoutes);
+  apiV1.use('/dive-logs', diveLogsRoutes);
 
   app.use(`/api/${config.server.apiVersion}`, apiV1);
 
