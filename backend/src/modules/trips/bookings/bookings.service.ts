@@ -1,9 +1,12 @@
 import { db } from '../../../config/database';
 import { NotFoundError, ForbiddenError, ValidationError } from '../../../utils/errors';
 import { calculateAge, isMinor } from '../../../utils/helpers';
+import { logger } from '../../../utils/logger';
 import { diversService } from '../../divers/divers.service';
 import { centersService } from '../../centers/centers.service';
 import { tripsService } from '../trips.service';
+import { notificationsService } from '../../notifications/notifications.service';
+import { srsaQuotaService } from '../../../integrations/srsa/quota.service';
 import { Trip } from '../trips.types';
 import {
   Booking,
@@ -63,12 +66,13 @@ export class BookingsService {
     const result = await db.query(
       `SELECT b.*,
         t.title_en AS trip_title,
-        u.first_name || ' ' || u.last_name AS user_name,
+        dp.first_name_en || ' ' || dp.last_name_en AS user_name,
         u.email AS user_email,
         dc.name_en AS center_name
       FROM bookings b
       JOIN trips t ON b.trip_id = t.id
       JOIN users u ON b.user_id = u.id
+      LEFT JOIN diver_profiles dp ON b.user_id = dp.user_id
       JOIN diving_centers dc ON b.center_id = dc.id
       WHERE ${whereClause}
       ORDER BY b.created_at DESC
@@ -110,12 +114,13 @@ export class BookingsService {
     const result = await db.query(
       `SELECT b.*,
         t.title_en AS trip_title,
-        u.first_name || ' ' || u.last_name AS user_name,
+        dp.first_name_en || ' ' || dp.last_name_en AS user_name,
         u.email AS user_email,
         dc.name_en AS center_name
       FROM bookings b
       JOIN trips t ON b.trip_id = t.id
       JOIN users u ON b.user_id = u.id
+      LEFT JOIN diver_profiles dp ON b.user_id = dp.user_id
       JOIN diving_centers dc ON b.center_id = dc.id
       WHERE ${whereClause}
       ORDER BY t.departure_datetime DESC
@@ -133,12 +138,13 @@ export class BookingsService {
     const result = await db.query(
       `SELECT b.*,
         t.title_en AS trip_title,
-        u.first_name || ' ' || u.last_name AS user_name,
+        dp.first_name_en || ' ' || dp.last_name_en AS user_name,
         u.email AS user_email,
         dc.name_en AS center_name
       FROM bookings b
       JOIN trips t ON b.trip_id = t.id
       JOIN users u ON b.user_id = u.id
+      LEFT JOIN diver_profiles dp ON b.user_id = dp.user_id
       JOIN diving_centers dc ON b.center_id = dc.id
       WHERE b.id = $1`,
       [bookingId]
@@ -193,7 +199,7 @@ export class BookingsService {
 
     // Check if user is minor
     const userResult = await db.query(
-      'SELECT is_minor FROM users WHERE id = $1',
+      'SELECT is_minor FROM diver_profiles WHERE user_id = $1',
       [userId]
     );
     const isUserMinor = userResult.rows[0]?.is_minor || false;
@@ -431,9 +437,10 @@ export class BookingsService {
 
   async getWaitingList(tripId: string): Promise<WaitingListEntry[]> {
     const result = await db.query(
-      `SELECT wl.*, u.first_name || ' ' || u.last_name AS user_name, u.email AS user_email
+      `SELECT wl.*, dp.first_name_en || ' ' || dp.last_name_en AS user_name, u.email AS user_email
        FROM booking_waiting_list wl
        JOIN users u ON wl.user_id = u.id
+       LEFT JOIN diver_profiles dp ON wl.user_id = dp.user_id
        WHERE wl.trip_id = $1
        ORDER BY wl.position ASC`,
       [tripId]
@@ -523,12 +530,12 @@ export class BookingsService {
         : 0;
 
     // Conservation fee (if not included in trip price)
-    // TODO: Integrate with SRSA quota service for actual zone-based fees
     let conservationFeeSar = 0;
     if (!trip.conservationFeeIncluded && trip.siteId) {
-      // Default zone fee - in production, fetch from SRSA service based on site
-      const defaultFeePerDiver = 35; // SAR (zone_2 default)
-      conservationFeeSar = defaultFeePerDiver * numberOfDivers;
+      // Get actual zone-based fee from SRSA service
+      const siteInfo = await srsaQuotaService.getSiteInfo(trip.siteId);
+      const feePerDiver = siteInfo?.feePerDiver ?? 35; // Default zone_2 if site not found
+      conservationFeeSar = feePerDiver * numberOfDivers;
     }
 
     // Insurance fee
@@ -595,7 +602,7 @@ export class BookingsService {
       return;
     }
 
-    // Mark as notified (in production, would also send email/notification)
+    // Mark as notified and send notification
     const firstInLine = waitingList[0];
     await db.query(
       `UPDATE booking_waiting_list SET
@@ -605,7 +612,23 @@ export class BookingsService {
       [firstInLine.id]
     );
 
-    // TODO: Integrate with notification service to send email/SMS
+    // Send notification to user about available spot
+    await notificationsService.send({
+      userId: firstInLine.userId,
+      type: 'waitlist_available',
+      channels: ['email', 'push', 'sms'],
+      title: 'Spot Available!',
+      body: `A spot has opened up for ${trip.titleEn}. Book now before it's gone!`,
+      priority: 'high',
+      data: {
+        tripId,
+        tripName: trip.titleEn,
+        tripDate: trip.departureDatetime.toISOString().split('T')[0],
+        expiresIn: '24 hours',
+      },
+    }).catch((err) => {
+      logger.error('Failed to send waitlist notification', { userId: firstInLine.userId, error: err.message });
+    });
   }
 
   async verifyBookingAccess(bookingId: string, userId: string): Promise<Booking> {

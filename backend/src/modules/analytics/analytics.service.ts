@@ -711,7 +711,7 @@ class AnalyticsService {
         t.date as trip_date,
         dc.name_en as center_name,
         ds.name_en as site_name,
-        CONCAT(u.first_name, ' ', u.last_name) as diver_name,
+        CONCAT(dp.first_name_en, ' ', dp.last_name_en) as diver_name,
         tb.status,
         tb.total_price,
         tb.created_at
@@ -719,7 +719,7 @@ class AnalyticsService {
        JOIN trips t ON tb.trip_id = t.id
        JOIN diving_centers dc ON t.center_id = dc.id
        JOIN dive_sites ds ON t.site_id = ds.id
-       JOIN users u ON tb.user_id = u.id
+       LEFT JOIN diver_profiles dp ON tb.user_id = dp.user_id
        WHERE tb.created_at >= $1 AND tb.created_at <= $2
        ORDER BY tb.created_at DESC`,
       [dateRange.from, dateRange.to]

@@ -1,0 +1,202 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "errorLoading": "فشل تحميل البيانات",
+    "retry": "إعادة المحاولة",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "filter": "تصفية",
+    "clearFilters": "مسح الفلاتر",
+    "noResults": "لا توجد نتائج",
+    "seeAll": "عرض الكل",
+    "learnMore": "معرفة المزيد",
+    "all": "الكل",
+    "clear": "مسح",
+    "days": "أيام",
+    "hours": "ساعات"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "trips": "الرحلات",
+    "centers": "مراكز الغوص",
+    "myBookings": "حجوزاتي",
+    "profile": "الملف الشخصي",
+    "diveLogs": "سجل الغوصات",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "logout": "تسجيل الخروج"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "phoneNumber": "رقم الهاتف",
+    "dateOfBirth": "تاريخ الميلاد",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "noAccount": "ليس لديك حساب؟",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "loginSuccess": "تم تسجيل الدخول بنجاح",
+    "registerSuccess": "تم إنشاء الحساب بنجاح",
+    "logoutSuccess": "تم تسجيل الخروج بنجاح",
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "passwordMinLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "passwordsNoMatch": "كلمات المرور غير متطابقة",
+    "termsAgreement": "أوافق على شروط الخدمة وسياسة الخصوصية"
+  },
+  "trips": {
+    "title": "رحلات الغوص",
+    "subtitle": "اكتشف مغامرة الغوص المثالية في البحر الأحمر",
+    "searchPlaceholder": "البحث عن رحلات...",
+    "search": "بحث",
+    "filters": "الفلاتر",
+    "filterByType": "نوع الرحلة",
+    "filterByDate": "التاريخ",
+    "filterByCenter": "مركز الغوص",
+    "diveType": "نوع الغوص",
+    "difficulty": "المستوى",
+    "priceRange": "نطاق السعر",
+    "minPrice": "الأدنى",
+    "maxPrice": "الأقصى",
+    "dateRange": "نطاق التاريخ",
+    "upcomingTrips": "الرحلات القادمة",
+    "spotsAvailable": "{{count}} مقاعد متاحة",
+    "spotsLeft": "{{count}} مقاعد متبقية",
+    "spotsLeft_one": "مقعد واحد متبقي",
+    "noSpotsLeft": "لا توجد مقاعد متاحة",
+    "full": "ممتلئ",
+    "tripFull": "الرحلة ممتلئة",
+    "joinWaitlist": "انضم لقائمة الانتظار",
+    "leaveWaitlist": "إلغاء الانتظار",
+    "bookNow": "احجز الآن",
+    "viewDetails": "عرض التفاصيل",
+    "perPerson": "للشخص",
+    "noTripsFound": "لم يتم العثور على رحلات",
+    "tryDifferentFilters": "حاول تعديل الفلاتر أو كلمات البحث",
+    "diveTypes": {
+      "recreational": "ترفيهي",
+      "technical": "تقني",
+      "night": "غوص ليلي",
+      "wreck": "حطام سفن",
+      "deep": "غوص عميق",
+      "drift": "غوص تيار"
+    },
+    "difficulties": {
+      "beginner": "مبتدئ",
+      "intermediate": "متوسط",
+      "advanced": "متقدم",
+      "expert": "خبير"
+    },
+    "tripTypes": {
+      "morning": "صباحية",
+      "afternoon": "مسائية",
+      "full_day": "يوم كامل",
+      "night": "غوص ليلي",
+      "multi_day": "متعددة الأيام",
+      "liveaboard": "سفينة مبيت"
+    },
+    "includes": {
+      "equipment": "المعدات متضمنة",
+      "meals": "الوجبات متضمنة",
+      "refreshments": "المشروبات متضمنة"
+    },
+    "requirements": {
+      "title": "المتطلبات",
+      "certification": "الشهادة: {{level}}",
+      "minDives": "{{count}} غوصات مسجلة كحد أدنى",
+      "ageRange": "العمر: {{min}}-{{max}} سنة"
+    },
+    "details": {
+      "departure": "المغادرة",
+      "return": "العودة",
+      "meetingPoint": "نقطة التجمع",
+      "diveSite": "موقع الغوص",
+      "diveCenter": "مركز الغوص",
+      "leadInstructor": "المدرب الرئيسي",
+      "numberOfDives": "{{count}} غوصات",
+      "maxDepth": "أقصى عمق"
+    }
+  },
+  "bookings": {
+    "title": "حجوزاتي",
+    "bookingNumber": "حجز رقم {{number}}",
+    "noBookings": "لا توجد حجوزات",
+    "startExploring": "ابدأ باستكشاف رحلات الغوص وقم بأول حجز لك!",
+    "status": {
+      "all": "الكل",
+      "pending": "في انتظار الدفع",
+      "confirmed": "مؤكد",
+      "checked_in": "تم تسجيل الحضور",
+      "completed": "مكتمل",
+      "cancelled": "ملغي",
+      "no_show": "لم يحضر"
+    },
+    "cancelBooking": "إلغاء الحجز",
+    "cancelConfirm": "هل أنت متأكد من إلغاء هذا الحجز؟",
+    "signWaiver": "توقيع إخلاء المسؤولية",
+    "waiverSigned": "تم التوقيع",
+    "equipmentRental": "استئجار المعدات",
+    "specialRequests": "طلبات خاصة",
+    "priceBreakdown": {
+      "title": "تفاصيل السعر",
+      "basePrice": "السعر الأساسي",
+      "equipment": "استئجار المعدات",
+      "conservation": "رسوم المحافظة البيئية",
+      "insurance": "تأمين الغوص",
+      "platformFee": "رسوم المنصة",
+      "vat": "ضريبة القيمة المضافة (15%)",
+      "discount": "الخصم",
+      "total": "الإجمالي"
+    }
+  },
+  "centers": {
+    "title": "مراكز الغوص",
+    "rating": "{{rating}} ({{count}} تقييم)",
+    "viewTrips": "عرض الرحلات",
+    "contactInfo": "معلومات الاتصال",
+    "location": "الموقع",
+    "srsaLicense": "رخصة SRSA"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "editProfile": "تعديل الملف",
+    "certifications": "الشهادات",
+    "addCertification": "إضافة شهادة",
+    "settings": "الإعدادات",
+    "emergencyContact": "جهة اتصال الطوارئ",
+    "diveStats": {
+      "totalDives": "إجمالي الغوصات",
+      "deepestDive": "أعمق غوصة",
+      "totalTime": "إجمالي وقت القاع"
+    }
+  },
+  "payment": {
+    "title": "الدفع",
+    "selectMethod": "اختر طريقة الدفع",
+    "processing": "جاري معالجة الدفع...",
+    "success": "تم الدفع بنجاح!",
+    "failed": "فشل الدفع",
+    "tryAgain": "حاول مرة أخرى"
+  },
+  "footer": {
+    "rights": "جميع الحقوق محفوظة",
+    "terms": "شروط الخدمة",
+    "privacy": "سياسة الخصوصية",
+    "contact": "اتصل بنا"
+  }
+}

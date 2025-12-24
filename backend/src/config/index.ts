@@ -25,6 +25,35 @@ function getEnvVarBool(key: string, defaultValue: boolean = false): boolean {
   return value.toLowerCase() === 'true' || value === '1';
 }
 
+// Parse DATABASE_URL if provided (Railway, Heroku, etc.)
+function parseDatabaseUrl(): {
+  host: string;
+  port: number;
+  name: string;
+  user: string;
+  password: string;
+  ssl: boolean;
+} | null {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) return null;
+
+  try {
+    const url = new URL(databaseUrl);
+    return {
+      host: url.hostname,
+      port: parseInt(url.port, 10) || 5432,
+      name: url.pathname.slice(1),
+      user: url.username,
+      password: url.password,
+      ssl: true, // Railway/cloud providers require SSL
+    };
+  } catch {
+    return null;
+  }
+}
+
+const dbFromUrl = parseDatabaseUrl();
+
 export const config = {
   env: getEnvVar('NODE_ENV', 'development'),
   isProduction: getEnvVar('NODE_ENV', 'development') === 'production',
@@ -34,15 +63,16 @@ export const config = {
     port: getEnvVarInt('PORT', 3001),
     host: getEnvVar('HOST', 'localhost'),
     apiVersion: getEnvVar('API_VERSION', 'v1'),
+    frontendUrl: getEnvVar('FRONTEND_URL', 'http://localhost:5173'),
   },
 
   database: {
-    host: getEnvVar('DB_HOST', 'localhost'),
-    port: getEnvVarInt('DB_PORT', 5432),
-    name: getEnvVar('DB_NAME', 'diving_platform'),
-    user: getEnvVar('DB_USER', 'postgres'),
-    password: getEnvVar('DB_PASSWORD', 'postgres'),
-    ssl: getEnvVarBool('DB_SSL', false),
+    host: dbFromUrl?.host ?? getEnvVar('DB_HOST', 'localhost'),
+    port: dbFromUrl?.port ?? getEnvVarInt('DB_PORT', 5432),
+    name: dbFromUrl?.name ?? getEnvVar('DB_NAME', 'diving_platform'),
+    user: dbFromUrl?.user ?? getEnvVar('DB_USER', 'postgres'),
+    password: dbFromUrl?.password ?? getEnvVar('DB_PASSWORD', 'postgres'),
+    ssl: dbFromUrl?.ssl ?? getEnvVarBool('DB_SSL', false),
     pool: {
       min: getEnvVarInt('DB_POOL_MIN', 2),
       max: getEnvVarInt('DB_POOL_MAX', 10),

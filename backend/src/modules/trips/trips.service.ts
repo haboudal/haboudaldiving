@@ -71,12 +71,12 @@ export class TripsService {
       `SELECT t.*,
         dc.name_en AS center_name,
         ds.name_en AS site_name,
-        u.first_name || ' ' || u.last_name AS lead_instructor_name,
+        dp.first_name_en || ' ' || dp.last_name_en AS lead_instructor_name,
         v.name AS vessel_name
       FROM trips t
       LEFT JOIN diving_centers dc ON t.center_id = dc.id
       LEFT JOIN dive_sites ds ON t.site_id = ds.id
-      LEFT JOIN users u ON t.lead_instructor_id = u.id
+      LEFT JOIN diver_profiles dp ON t.lead_instructor_id = dp.user_id
       LEFT JOIN vessels v ON t.vessel_id = v.id
       ${whereClause}
       ORDER BY t.departure_datetime ASC
@@ -95,12 +95,12 @@ export class TripsService {
       `SELECT t.*,
         dc.name_en AS center_name,
         ds.name_en AS site_name,
-        u.first_name || ' ' || u.last_name AS lead_instructor_name,
+        dp.first_name_en || ' ' || dp.last_name_en AS lead_instructor_name,
         v.name AS vessel_name
       FROM trips t
       LEFT JOIN diving_centers dc ON t.center_id = dc.id
       LEFT JOIN dive_sites ds ON t.site_id = ds.id
-      LEFT JOIN users u ON t.lead_instructor_id = u.id
+      LEFT JOIN diver_profiles dp ON t.lead_instructor_id = dp.user_id
       LEFT JOIN vessels v ON t.vessel_id = v.id
       WHERE t.id = $1`,
       [tripId]
@@ -359,9 +359,9 @@ export class TripsService {
 
   async getInstructors(tripId: string): Promise<TripInstructor[]> {
     const result = await db.query(
-      `SELECT ti.*, u.first_name || ' ' || u.last_name AS instructor_name
+      `SELECT ti.*, dp.first_name_en || ' ' || dp.last_name_en AS instructor_name
        FROM trip_instructors ti
-       JOIN users u ON ti.instructor_id = u.id
+       LEFT JOIN diver_profiles dp ON ti.instructor_id = dp.user_id
        WHERE ti.trip_id = $1
        ORDER BY ti.role = 'lead' DESC, ti.created_at ASC`,
       [tripId]

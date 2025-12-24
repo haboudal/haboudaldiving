@@ -8,6 +8,7 @@ import { generateToken, hashToken, calculateAge, isMinor } from '../../utils/hel
 import { logger } from '../../utils/logger';
 import { JwtPayload, User, UserRole } from '../../types';
 import { RegisterDto, LoginDto } from './auth.validation';
+import { notificationsService } from '../notifications/notifications.service';
 
 interface AuthTokens {
   accessToken: string;
@@ -83,13 +84,39 @@ export class AuthService {
       [result.id, hashToken(verificationToken)]
     );
 
-    // TODO: Send verification email
-    logger.info('Verification token generated', { userId: result.id, token: verificationToken });
+    // Send verification email
+    const verificationLink = `${config.server.frontendUrl}/verify-email?token=${verificationToken}`;
+    await notificationsService.send({
+      userId: result.id,
+      type: 'email_verification',
+      channels: ['email'],
+      title: 'Verify Your Email',
+      body: `Please verify your email by clicking: ${verificationLink}`,
+      data: {
+        firstName: dto.firstName,
+        verificationLink,
+      },
+    }).catch((err) => {
+      logger.error('Failed to send verification email', { userId: result.id, error: err.message });
+    });
 
     // Handle minor parent linking
     if (userIsMinor && dto.parentEmail) {
-      // TODO: Send parent invitation email
-      logger.info('Parent linking required', { userId: result.id, parentEmail: dto.parentEmail });
+      // Send parent consent request email
+      await notificationsService.send({
+        userId: result.id,
+        type: 'consent_requested',
+        channels: ['email'],
+        title: 'Parental Consent Required',
+        body: `${dto.firstName} has registered and needs your consent.`,
+        data: {
+          minorName: `${dto.firstName} ${dto.lastName}`,
+          parentEmail: dto.parentEmail,
+          consentLink: `${config.server.frontendUrl}/parent-consent?userId=${result.id}`,
+        },
+      }).catch((err) => {
+        logger.error('Failed to send parent consent email', { userId: result.id, error: err.message });
+      });
     }
 
     // Generate tokens
@@ -321,8 +348,20 @@ export class AuthService {
       [result.rows[0].id, hashToken(resetToken)]
     );
 
-    // TODO: Send password reset email
-    logger.info('Password reset token generated', { userId: result.rows[0].id, token: resetToken });
+    // Send password reset email
+    const resetLink = `${config.server.frontendUrl}/reset-password?token=${resetToken}`;
+    await notificationsService.send({
+      userId: result.rows[0].id,
+      type: 'password_reset',
+      channels: ['email'],
+      title: 'Reset Your Password',
+      body: `Click to reset your password: ${resetLink}`,
+      data: {
+        resetLink,
+      },
+    }).catch((err) => {
+      logger.error('Failed to send password reset email', { userId: result.rows[0].id, error: err.message });
+    });
   }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {

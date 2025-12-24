@@ -1,0 +1,202 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "errorLoading": "Failed to load data",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "clearFilters": "Clear Filters",
+    "noResults": "No results found",
+    "seeAll": "See All",
+    "learnMore": "Learn More",
+    "all": "All",
+    "clear": "Clear",
+    "days": "days",
+    "hours": "hours"
+  },
+  "nav": {
+    "home": "Home",
+    "trips": "Trips",
+    "centers": "Dive Centers",
+    "myBookings": "My Bookings",
+    "profile": "Profile",
+    "diveLogs": "Dive Logs",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Create Account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phoneNumber": "Phone Number",
+    "dateOfBirth": "Date of Birth",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "loginSuccess": "Login successful",
+    "registerSuccess": "Registration successful",
+    "logoutSuccess": "Logged out successfully",
+    "invalidCredentials": "Invalid email or password",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "passwordsNoMatch": "Passwords do not match",
+    "termsAgreement": "I agree to the Terms of Service and Privacy Policy"
+  },
+  "trips": {
+    "title": "Dive Trips",
+    "subtitle": "Find your perfect diving adventure in the Red Sea",
+    "searchPlaceholder": "Search trips...",
+    "search": "Search",
+    "filters": "Filters",
+    "filterByType": "Trip Type",
+    "filterByDate": "Date",
+    "filterByCenter": "Dive Center",
+    "diveType": "Dive Type",
+    "difficulty": "Difficulty",
+    "priceRange": "Price Range",
+    "minPrice": "Min",
+    "maxPrice": "Max",
+    "dateRange": "Date Range",
+    "upcomingTrips": "Upcoming Trips",
+    "spotsAvailable": "{{count}} spots available",
+    "spotsLeft": "{{count}} spots left",
+    "spotsLeft_one": "{{count}} spot left",
+    "noSpotsLeft": "No spots left",
+    "full": "Full",
+    "tripFull": "Trip Full",
+    "joinWaitlist": "Join Waitlist",
+    "leaveWaitlist": "Leave Waitlist",
+    "bookNow": "Book Now",
+    "viewDetails": "View Details",
+    "perPerson": "person",
+    "noTripsFound": "No trips found",
+    "tryDifferentFilters": "Try adjusting your filters or search terms",
+    "diveTypes": {
+      "recreational": "Recreational",
+      "technical": "Technical",
+      "night": "Night Dive",
+      "wreck": "Wreck",
+      "deep": "Deep Dive",
+      "drift": "Drift Dive"
+    },
+    "difficulties": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "expert": "Expert"
+    },
+    "tripTypes": {
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "full_day": "Full Day",
+      "night": "Night Dive",
+      "multi_day": "Multi-Day",
+      "liveaboard": "Liveaboard"
+    },
+    "includes": {
+      "equipment": "Equipment Included",
+      "meals": "Meals Included",
+      "refreshments": "Refreshments Included"
+    },
+    "requirements": {
+      "title": "Requirements",
+      "certification": "Certification: {{level}}",
+      "minDives": "Minimum {{count}} logged dives",
+      "ageRange": "Age: {{min}}-{{max}} years"
+    },
+    "details": {
+      "departure": "Departure",
+      "return": "Return",
+      "meetingPoint": "Meeting Point",
+      "diveSite": "Dive Site",
+      "diveCenter": "Dive Center",
+      "leadInstructor": "Lead Instructor",
+      "numberOfDives": "{{count}} dives",
+      "maxDepth": "Max Depth"
+    }
+  },
+  "bookings": {
+    "title": "My Bookings",
+    "bookingNumber": "Booking #{{number}}",
+    "noBookings": "No bookings yet",
+    "startExploring": "Start exploring dive trips and make your first booking!",
+    "status": {
+      "all": "All",
+      "pending": "Pending Payment",
+      "confirmed": "Confirmed",
+      "checked_in": "Checked In",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "no_show": "No Show"
+    },
+    "cancelBooking": "Cancel Booking",
+    "cancelConfirm": "Are you sure you want to cancel this booking?",
+    "signWaiver": "Sign Waiver",
+    "waiverSigned": "Waiver Signed",
+    "equipmentRental": "Equipment Rental",
+    "specialRequests": "Special Requests",
+    "priceBreakdown": {
+      "title": "Price Breakdown",
+      "basePrice": "Base Price",
+      "equipment": "Equipment Rental",
+      "conservation": "Conservation Fee",
+      "insurance": "Dive Insurance",
+      "platformFee": "Platform Fee",
+      "vat": "VAT (15%)",
+      "discount": "Discount",
+      "total": "Total"
+    }
+  },
+  "centers": {
+    "title": "Dive Centers",
+    "rating": "{{rating}} ({{count}} reviews)",
+    "viewTrips": "View Trips",
+    "contactInfo": "Contact Information",
+    "location": "Location",
+    "srsaLicense": "SRSA License"
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "certifications": "Certifications",
+    "addCertification": "Add Certification",
+    "settings": "Settings",
+    "emergencyContact": "Emergency Contact",
+    "diveStats": {
+      "totalDives": "Total Dives",
+      "deepestDive": "Deepest Dive",
+      "totalTime": "Total Bottom Time"
+    }
+  },
+  "payment": {
+    "title": "Payment",
+    "selectMethod": "Select Payment Method",
+    "processing": "Processing payment...",
+    "success": "Payment successful!",
+    "failed": "Payment failed",
+    "tryAgain": "Try Again"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "contact": "Contact Us"
+  }
+}

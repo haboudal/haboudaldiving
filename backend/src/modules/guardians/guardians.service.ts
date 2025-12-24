@@ -1,6 +1,7 @@
 import { db } from '../../config/database';
 import { NotFoundError, ForbiddenError, ConflictError } from '../../utils/errors';
 import { logger } from '../../utils/logger';
+import { notificationsService } from '../notifications/notifications.service';
 
 interface LinkedMinor {
   id: string;
@@ -93,7 +94,21 @@ export class GuardiansService {
       [parentUserId, minor.id, relationship]
     );
 
-    // TODO: Send notification to minor for approval
+    // Send notification to minor for approval
+    await notificationsService.send({
+      userId: minor.id,
+      type: 'consent_requested',
+      channels: ['email', 'in_app'],
+      title: 'Parent Link Request',
+      body: 'A parent/guardian has requested to link with your account.',
+      data: {
+        linkId: result.rows[0].id,
+        relationship,
+      },
+    }).catch((err) => {
+      logger.error('Failed to send parent link notification', { minorUserId: minor.id, error: err.message });
+    });
+
     logger.info('Parent-minor link initiated', {
       parentUserId,
       minorUserId: minor.id,

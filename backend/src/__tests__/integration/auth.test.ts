@@ -221,8 +221,9 @@ describe('Auth Module Integration Tests', () => {
         .set('Authorization', `Bearer ${token}`)
         .send();
 
-      // Will get 500 without DB, but auth middleware accepts the token
-      expect(response.status).toBeOneOf([200, 500]);
+      // 200 for success, 404 for user not found in DB, 500 for DB error
+      // Auth middleware accepts the token (not 401)
+      expect(response.status).toBeOneOf([200, 404, 500]);
     });
   });
 
