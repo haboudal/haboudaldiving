@@ -5,12 +5,22 @@ import { redis } from './config/redis';
 import { logger } from './utils/logger';
 
 async function waitForDatabase(maxRetries = 10, delayMs = 3000): Promise<boolean> {
+  logger.info('Database config', {
+    host: process.env.DB_HOST || 'from DATABASE_URL',
+    hasDbUrl: !!process.env.DATABASE_URL,
+    dbUrlPrefix: process.env.DATABASE_URL?.substring(0, 30) + '...'
+  });
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const healthy = await db.healthCheck();
       if (healthy) return true;
     } catch (error) {
-      logger.warn(`Database connection attempt ${attempt}/${maxRetries} failed`, { error });
+      const err = error as Error;
+      logger.warn(`Database connection attempt ${attempt}/${maxRetries} failed`, {
+        message: err.message,
+        code: (error as NodeJS.ErrnoException).code
+      });
     }
     if (attempt < maxRetries) {
       await new Promise(resolve => setTimeout(resolve, delayMs));
@@ -86,7 +96,13 @@ async function bootstrap(): Promise<void> {
     process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
   } catch (error) {
-    logger.error('Failed to start server', { error });
+    const err = error as Error;
+    logger.error('Failed to start server', {
+      message: err.message,
+      stack: err.stack,
+      name: err.name,
+      error: String(error)
+    });
     process.exit(1);
   }
 }
