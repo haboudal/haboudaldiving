@@ -31,23 +31,7 @@ async function waitForDatabase(maxRetries = 10, delayMs = 3000): Promise<boolean
 
 async function bootstrap(): Promise<void> {
   try {
-    // Wait for database connection with retries
-    logger.info('Waiting for database connection...');
-    const dbHealthy = await waitForDatabase();
-    if (!dbHealthy) {
-      throw new Error('Database connection failed after retries');
-    }
-    logger.info('Database connected successfully');
-
-    // Connect to Redis (optional - don't fail if unavailable)
-    try {
-      await redis.connect();
-      logger.info('Redis connected successfully');
-    } catch (redisError) {
-      logger.warn('Redis connection failed - continuing without cache', { error: redisError });
-    }
-
-    // Create and start Express app
+    // Create and start Express app FIRST so healthcheck works
     const app = createApp();
 
     // In production, bind to 0.0.0.0 to accept external connections
@@ -57,7 +41,23 @@ async function bootstrap(): Promise<void> {
       logger.info(`Server running on http://${host}:${config.server.port}`);
       logger.info(`API available at http://${host}:${config.server.port}/api/${config.server.apiVersion}`);
       logger.info(`Environment: ${config.env}`);
-      logger.info(`SRSA Mock Mode: ${config.srsa.useMock ? 'enabled' : 'disabled'}`);
+    });
+
+    // Now connect to database in background (don't block startup)
+    logger.info('Connecting to database...');
+    waitForDatabase().then((dbHealthy) => {
+      if (dbHealthy) {
+        logger.info('Database connected successfully');
+      } else {
+        logger.error('Database connection failed after retries - API will have limited functionality');
+      }
+    });
+
+    // Connect to Redis (optional - don't fail if unavailable)
+    redis.connect().then(() => {
+      logger.info('Redis connected successfully');
+    }).catch((redisError) => {
+      logger.warn('Redis connection failed - continuing without cache', { error: redisError });
     });
 
     // Graceful shutdown
