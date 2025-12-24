@@ -4,16 +4,32 @@ import { db } from './config/database';
 import { redis } from './config/redis';
 import { logger } from './utils/logger';
 
+async function waitForDatabase(maxRetries = 10, delayMs = 3000): Promise<boolean> {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const healthy = await db.healthCheck();
+      if (healthy) return true;
+    } catch (error) {
+      logger.warn(`Database connection attempt ${attempt}/${maxRetries} failed`, { error });
+    }
+    if (attempt < maxRetries) {
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  return false;
+}
+
 async function bootstrap(): Promise<void> {
   try {
-    // Test database connection
-    const dbHealthy = await db.healthCheck();
+    // Wait for database connection with retries
+    logger.info('Waiting for database connection...');
+    const dbHealthy = await waitForDatabase();
     if (!dbHealthy) {
-      throw new Error('Database connection failed');
+      throw new Error('Database connection failed after retries');
     }
     logger.info('Database connected successfully');
 
-    // Connect to Redis
+    // Connect to Redis (optional - don't fail if unavailable)
     try {
       await redis.connect();
       logger.info('Redis connected successfully');
@@ -24,9 +40,12 @@ async function bootstrap(): Promise<void> {
     // Create and start Express app
     const app = createApp();
 
-    const server = app.listen(config.server.port, config.server.host, () => {
-      logger.info(`Server running on http://${config.server.host}:${config.server.port}`);
-      logger.info(`API available at http://${config.server.host}:${config.server.port}/api/${config.server.apiVersion}`);
+    // In production, bind to 0.0.0.0 to accept external connections
+    const host = config.isProduction ? '0.0.0.0' : config.server.host;
+
+    const server = app.listen(config.server.port, host, () => {
+      logger.info(`Server running on http://${host}:${config.server.port}`);
+      logger.info(`API available at http://${host}:${config.server.port}/api/${config.server.apiVersion}`);
       logger.info(`Environment: ${config.env}`);
       logger.info(`SRSA Mock Mode: ${config.srsa.useMock ? 'enabled' : 'disabled'}`);
     });
